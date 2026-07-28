@@ -61,6 +61,55 @@ and get back a [full response](/api/#pyqwest.FullResponse).
     print(response.text())
     ```
 
+## Multipart forms
+
+To send a `multipart/form-data` request, for example to upload files, pass a
+[`Multipart`](/api/#pyqwest.Multipart) object as the request content with `Client`, or a
+[`SyncMultipart`](/api/#pyqwest.SyncMultipart) with `SyncClient`. Parts can be provided
+as `bytes` or `str` for simple form fields, or as a [`Part`](/api/#pyqwest.Part) /
+[`SyncPart`](/api/#pyqwest.SyncPart) to set a filename or part headers such as a
+content type. A part's content can also be an iterator of `bytes` to stream it. The
+multipart boundary is generated automatically when constructing the request and the
+content-type header is set to match it.
+
+=== "async"
+
+    ```python
+    from pyqwest import Multipart, Part
+
+    async def file_chunks():
+        yield b"file "
+        yield b"content"
+
+    response = await client.post(
+        "https://httpbingo.org/post",
+        content=Multipart({
+            "field": "value",
+            "file": Part(file_chunks(), filename="hello.txt", headers={"content-type": "text/plain"}),
+        }),
+    )
+    print(response.text())
+    ```
+
+=== "sync"
+
+    ```python
+    from pyqwest import SyncMultipart, SyncPart
+
+    def file_chunks():
+        yield b"file "
+        yield b"content"
+
+    response = client.post(
+        "https://httpbingo.org/post",
+        content=SyncMultipart({
+            "field": "value",
+            "file": SyncPart(file_chunks(), filename="hello.txt", headers={"content-type": "text/plain"}),
+        }),
+    )
+    print(response.text())
+    ```
+
 ## Transport
 
 The default transport is setup to behave closely to a web browser, using standard root certificates

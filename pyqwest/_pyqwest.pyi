@@ -17,12 +17,18 @@ from typing import Literal, Protocol, TypeAlias, TypeVar, overload, runtime_chec
 from opentelemetry.metrics import MeterProvider
 from opentelemetry.trace import TracerProvider
 
+from ._multipart import Multipart, SyncMultipart
+
 _T = TypeVar("_T")
 _JSON: TypeAlias = (
     Mapping[str, _JSON] | Sequence[_JSON] | str | int | float | bool | None
 )
-_RequestContent: TypeAlias = bytes | AsyncIterator[bytes] | Mapping[str, _JSON]
-_SyncRequestContent: TypeAlias = bytes | Iterable[bytes] | Mapping[str, _JSON]
+_RequestContent: TypeAlias = (
+    bytes | AsyncIterator[bytes] | Mapping[str, _JSON] | Multipart
+)
+_SyncRequestContent: TypeAlias = (
+    bytes | Iterable[bytes] | Mapping[str, _JSON] | SyncMultipart
+)
 
 _Buffer: TypeAlias = bytes | memoryview | bytearray
 _QueryParams: TypeAlias = dict[str, str | None] | Iterable[tuple[str, str | None]]
@@ -259,7 +265,8 @@ class Client:
         Args:
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a Multipart will be sent as a multipart form.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
         Raises:
@@ -344,7 +351,8 @@ class Client:
         Args:
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a Multipart will be sent as a multipart form.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
         Raises:
@@ -367,7 +375,8 @@ class Client:
         Args:
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a Multipart will be sent as a multipart form.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
         Raises:
@@ -392,7 +401,8 @@ class Client:
             method: The HTTP method.
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a Multipart will be sent as a multipart form.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
         Raises:
@@ -417,7 +427,8 @@ class Client:
             method: The HTTP method.
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a Multipart will be sent as a multipart form.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
         Raises:
@@ -612,7 +623,8 @@ class Request:
             method: The HTTP method.
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a Multipart will be sent as a multipart form.
             params: Query parameters to append to the URL. None values will be treated as key-only.
         """
 
@@ -762,7 +774,8 @@ class SyncClient:
         Args:
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a SyncMultipart will be sent as a multipart form.
             timeout: The timeout for the request in seconds.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
@@ -856,7 +869,8 @@ class SyncClient:
         Args:
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a SyncMultipart will be sent as a multipart form.
             timeout: The timeout for the request in seconds.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
@@ -881,7 +895,8 @@ class SyncClient:
         Args:
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a SyncMultipart will be sent as a multipart form.
             timeout: The timeout for the request in seconds.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
@@ -908,7 +923,8 @@ class SyncClient:
             method: The HTTP method.
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a SyncMultipart will be sent as a multipart form.
             timeout: The timeout for the request in seconds.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
@@ -935,7 +951,8 @@ class SyncClient:
             method: The HTTP method.
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a SyncMultipart will be sent as a multipart form.
             timeout: The timeout for the request in seconds.
             params: Query parameters to append to the URL. None values will be treated as key-only.
 
@@ -1090,7 +1107,8 @@ class SyncRequest:
             method: The HTTP method.
             url: The unencoded request URL.
             headers: The request headers.
-            content: The request content. A Python dictionary will be converted to JSON.
+            content: The request content. A Python dictionary will be converted
+                     to JSON and a SyncMultipart will be sent as a multipart form.
             params: Query parameters to append to the URL. None values will be treated as key-only.
         """
 
